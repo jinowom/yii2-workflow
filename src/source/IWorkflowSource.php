@@ -1,0 +1,60 @@
+<?php
+namespace jinowom\workflow\source;
+
+/**
+ * Interface for WorkflowSource components.
+ *
+ * This interface defines basic methods aimed to provide status, workflow and transitions
+ * to the SimpleStatusBehavior.
+ */
+interface IWorkflowSource
+{
+	/**
+	 * Returns the Status instance for a given status id.
+	 * In case of unexpected error the implementation must return a WorkflowException.
+	 *
+	 * @param mixed $id the status id
+	 * @return \jinowom\workflow\base\StatusInterface the status instance or NULL if no status could be found for this id.
+	 * @throws \jinowom\workflow\base\WorkflowException unexpected error
+	 */
+	public function getStatus($id, $model = null);
+	/**
+	 * Returns an array containing all Status instances belonging to the workflow
+	 * whose id is passed as argument.
+	 *
+	 * @param string $id workflow Id
+	 * @return \jinowom\workflow\base\StatusInterface[] list of status. The array key is the status ID
+	 * @throws \jinowom\workflow\base\WorkflowException no workflow is found with this Id
+	 */
+	public function getAllStatuses($id);
+	/**
+	 * Returns an array of transitions leaving the status whose id is passed as argument.
+	 *
+	 * If no status is found for this id, a WorkflowException must be thrown.
+	 * If not outgoing transition exists for the status, an empty array must be returned.
+	 * The array returned must be indexed by status Id
+	 *
+	 * @param mixed $statusId
+	 * @return \jinowom\workflow\base\TransitionInterface[] an array containing all out going transition from $statusId. If no such
+	 * transition exist, this method returns an empty array.
+	 * @throws \jinowom\workflow\base\WorkflowException unexpected error
+	 */
+	public function getTransitions($statusId, $model = null);
+	/**
+	 * Returns the transitions that leaves status $startId and reaches status  $endId.
+	 *
+	 * @param mixed $startId
+	 * @param mixed $endId
+	 * @param mixed $model
+	 *  @return \jinowom\workflow\base\TransitionInterface the transition between start and end status
+	 */
+	public function getTransition($startId, $endId, $model = null);
+	/**
+	 * Returns the workflow instance whose id is passed as argument.
+	 * In case of unexpected error the implementation must return a WorkflowException.
+	 *
+	 * @param mixed $id the workflow id
+	 * @return \jinowom\workflow\base\WorkflowInterface the workflow instance or NULL if no workflow could be found.
+	 */
+	public function getWorkflow($id);
+}
